@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — AI Agent Certification Lab{% endblock %}
+{% block content %}
+<section class="dash-header">
+  <div>
+    <h1>Welcome, {{ current_user.full_name.split(' ')[0] }}</h1>
+    <p class="muted">Track your progress through the AI Agent Certification Lab.</p>
+  </div>
+  <div class="progress-ring-wrap">
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" style="width: {{ percent }}%;"></div>
+    </div>
+    <span class="progress-label">{{ done }} / {{ total }} modules complete ({{ percent }}%)</span>
+  </div>
+</section>
+
+<section class="module-grid">
+  {% for m in modules %}
+  <div class="module-card {{ 'module-done' if m.completed else '' }}">
+    <div class="module-top">
+      <span class="pill pill-{{ m.difficulty|lower }}">{{ m.difficulty }}</span>
+      {% if m.completed %}<span class="pill pill-success">✓ Complete — {{ m.score }}%</span>{% endif %}
+    </div>
+    <h3>{{ m.title }}</h3>
+    <p>{{ m.summary }}</p>
+    <a class="btn {{ 'btn-secondary' if m.completed else 'btn-primary' }} btn-block"
+       href="{{ url_for('module_view', module_id=m.id) }}">
+      {{ 'Review module' if m.completed else 'Start module' }}
+    </a>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="exam-cta {{ 'exam-cta-ready' if all_complete else '' }}">
+  {% if certificate %}
+    <h2>🎓 You're certified!</h2>
+    <p>You earned your certificate with a score of {{ certificate.final_score }}%.</p>
+    <a class="btn btn-gold" href="{{ url_for('view_certificate') }}">View certificate</a>
+  {% elif all_complete %}
+    <h2>All modules complete — take the certification exam</h2>
+    <p>Pass with 80% or higher to earn your official PDF certificate.</p>
+    <a class="btn btn-gold" href="{{ url_for('exam') }}">Take the exam</a>
+  {% else %}
+    <h2>Certification exam locked</h2>
+    <p>Complete all {{ total }} modules to unlock the final certification exam.</p>
+  {% endif %}
+</section>
+{% endblock %}

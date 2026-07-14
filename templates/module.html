@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ module.title }} — AI Agent Certification Lab{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('dashboard') }}">&larr; Back to dashboard</a>
+
+<section class="module-page">
+  <span class="pill pill-{{ module.difficulty|lower }}">{{ module.difficulty }}</span>
+  <h1>{{ module.title }}</h1>
+
+  <div class="lesson-block">
+    {% for para in module.lesson.split('\n\n') %}
+      <p>{{ para }}</p>
+    {% endfor %}
+  </div>
+
+  <div class="exercise-block">
+    <h2>Code Exercise</h2>
+    <p>{{ module.exercise.prompt }}</p>
+    <pre class="code-block"><code>{{ module.exercise.starter_code }}</code></pre>
+
+    <details class="solution-toggle">
+      <summary>Show reference solution</summary>
+      <pre class="code-block code-solution"><code>{{ module.exercise.solution_code }}</code></pre>
+    </details>
+  </div>
+
+  <div class="quiz-block">
+    <h2>Knowledge Check</h2>
+    <p class="muted">Score {{ module.pass_score }}% or higher to mark this module complete.</p>
+
+    {% if result %}
+      <div class="quiz-result {{ 'quiz-pass' if result.passed else 'quiz-fail' }}">
+        {% if result.passed %}
+          ✓ Passed — {{ result.correct }}/{{ result.total }} correct ({{ result.score }}%)
+        {% else %}
+          Not yet — {{ result.correct }}/{{ result.total }} correct ({{ result.score }}%). Needs {{ result.pass_score }}%. Try again below.
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('module_view', module_id=module.id) }}">
+      {% for q in module.quiz %}
+      {% set q_index = loop.index0 %}
+      <fieldset class="quiz-question">
+        <legend>{{ loop.index }}. {{ q.question }}</legend>
+        {% for opt in q.options %}
+        <label class="quiz-option">
+          <input type="radio" name="q{{ q_index }}" value="{{ loop.index0 }}" required>
+          {{ opt }}
+        </label>
+        {% endfor %}
+      </fieldset>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Submit answers</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

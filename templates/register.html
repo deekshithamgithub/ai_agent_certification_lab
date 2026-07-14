@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Create Account — AI Agent Certification Lab{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-card">
+    <h2>Create your account</h2>
+    <p class="auth-sub">Start earning your AI Agent certification today.</p>
+
+    <form method="POST" action="{{ url_for('register') }}" class="auth-form">
+      <label for="full_name">Full name</label>
+      <input type="text" id="full_name" name="full_name" placeholder="Ada Lovelace" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="At least 8 characters" required minlength="8">
+
+      <label for="confirm_password">Confirm password</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat your password" required minlength="8">
+
+      <button type="submit" class="btn btn-primary btn-block">Create account</button>
+    </form>
+
+    <p class="auth-footer">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+  </div>
+</section>
+{% endblock %}

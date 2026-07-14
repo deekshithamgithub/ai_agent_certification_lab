@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}AI Agent Certification Lab — Learn to Build & Certify AI Agents{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-badge">Hands-on &middot; Auto-graded &middot; Certificate on completion</div>
+  <h1>Become a Certified AI Agent Developer</h1>
+  <p class="hero-sub">
+    Three practical modules on agent foundations, tool use, and multi-agent
+    orchestration — each with a lesson, a code exercise, and an auto-graded
+    quiz. Finish the final exam to earn a downloadable PDF certificate.
+  </p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="{{ url_for('register') }}">Start the Lab</a>
+    <a class="btn btn-ghost" href="{{ url_for('login') }}">I already have an account</a>
+  </div>
+</section>
+
+<section class="feature-grid">
+  <div class="feature-card">
+    <div class="feature-num">01</div>
+    <h3>Agent Foundations</h3>
+    <p>The observe-think-act loop, state, and when to stop.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-num">02</div>
+    <h3>Tool Use & Function Calling</h3>
+    <p>Design safe, validated, well-scoped tools.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-num">03</div>
+    <h3>Multi-Agent Orchestration</h3>
+    <p>Coordinate specialized agents with guardrails.</p>
+  </div>
+  <div class="feature-card feature-card-accent">
+    <div class="feature-num">🎓</div>
+    <h3>Certification Exam</h3>
+    <p>Pass the final exam to receive your PDF certificate.</p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Your Certificate — AI Agent Certification Lab{% endblock %}
+{% block content %}
+<section class="cert-page">
+  <div class="cert-preview">
+    <div class="cert-badge">🎓</div>
+    <h1>Certified AI Agent Developer</h1>
+    <p class="cert-name">{{ user.full_name }}</p>
+    <p class="muted">Final score: {{ certificate.final_score }}% &middot; Issued {{ certificate.issued_at.strftime('%B %d, %Y') }}</p>
+    <p class="muted cert-id">Certificate ID: {{ certificate.cert_id }}</p>
+    <a class="btn btn-gold btn-block" href="{{ url_for('download_certificate') }}">Download PDF certificate</a>
+    <a class="btn btn-ghost btn-block" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+  </div>
+</section>
+{% endblock %}

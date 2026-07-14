@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Certification Exam — AI Agent Certification Lab{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('dashboard') }}">&larr; Back to dashboard</a>
+
+<section class="module-page">
+  <span class="pill pill-gold">Final Exam</span>
+  <h1>AI Agent Certification Exam</h1>
+  <p class="muted">Pass with 80% or higher across {{ questions|length }} questions to earn your certificate.</p>
+
+  {% if result %}
+    <div class="quiz-result {{ 'quiz-pass' if result.passed else 'quiz-fail' }}">
+      {% if result.passed %}
+        ✓ Passed — {{ result.correct }}/{{ result.total }} correct ({{ result.score }}%)
+      {% else %}
+        Not yet — {{ result.correct }}/{{ result.total }} correct ({{ result.score }}%). Needs 80%. Try again below.
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('exam') }}">
+    {% for q in questions %}
+    {% set q_index = loop.index0 %}
+    <fieldset class="quiz-question">
+      <legend>{{ loop.index }}. {{ q.question }}</legend>
+      {% for opt in q.options %}
+      <label class="quiz-option">
+        <input type="radio" name="q{{ q_index }}" value="{{ loop.index0 }}" required>
+        {{ opt }}
+      </label>
+      {% endfor %}
+    </fieldset>
+    {% endfor %}
+    <button type="submit" class="btn btn-gold">Submit exam</button>
+  </form>
+</section>
+{% endblock %}
