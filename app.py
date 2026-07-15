@@ -37,9 +37,21 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "instance", "lab.db")
+
+# Use DATABASE_URL if provided (e.g. Postgres on Render/Railway/Fly), else fall
+# back to a local SQLite file for simple/demo deployments.
+database_url = os.environ.get("DATABASE_URL", "")
+if database_url.startswith("postgres://"):
+    # SQLAlchemy 1.4+ requires the "postgresql://" scheme, not "postgres://"
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url or (
+    "sqlite:///" + os.path.join(basedir, "instance", "lab.db")
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["CERT_FOLDER"] = os.path.join(basedir, "certificates")
+app.config["CERT_FOLDER"] = os.environ.get(
+    "CERT_FOLDER", os.path.join(basedir, "certificates")
+)
 
 db = SQLAlchemy(app)
 
@@ -352,6 +364,13 @@ def init_db():
         db.create_all()
 
 
+# Initialize the database/certificate folder as soon as the app module is
+# imported. This matters in production, where a WSGI server like gunicorn
+# imports `app:app` directly and never runs the `if __name__ == "__main__"`
+# block below.
+init_db()
+
 if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug)
