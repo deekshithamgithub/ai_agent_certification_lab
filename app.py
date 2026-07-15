@@ -16,6 +16,9 @@ import uuid
 import random
 from datetime import datetime
 
+from dotenv import load_dotenv
+load_dotenv()  # loads variables from a local .env file, if present
+
 from flask import (
     Flask, render_template, redirect, url_for, request,
     flash, session, send_from_directory, abort
@@ -372,5 +375,5 @@ init_db()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    debug = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
+    debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug)
